@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Page</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron text-center">
+                <h1 class="display-3">Hot Restaurant</h1>
+                <p class="lead">Your One Stop Shop for Restaurant Reservations</p>
+                <hr class="my-4">
+                <p>
+                    <strong>Make a Reservation</strong>
+                </p>
+                <p class="lead">
+                    <a class="btn btn-primary btn-lg" href="/tables" role="button">View Table</a>
+                    <a class="btn btn-success btn-lg" href="/" role="button">
+                        <span class="glyphicon glyphicon-home"></span>
+                    </a>
+                </p>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <strong>Reserve Your Table</strong>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <form method="POST" role="form">
+
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="resName">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="role">Phone Number</label>
+                                    <input type="text" class="form-control" id="resPhone">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="age">Email</label>
+                                    <input type="text" class="form-control" id="resEmail">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="force-points">Unique ID</label>
+                                    <input type="text" class="form-control" id="resID">
+                                </div>
+
+                            </form>
+                            <br>
+                            <div class="text-left">
+                                <button type="submit" class="btn btn-primary btn-md" id="submit">
+                                    <span class="glyphicon glyphicon-fire">Submit</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            $("#submit").on("click", function (e) {
+                e.preventDefault();
+
+                var newRes = {
+                    name: $("#resName").val().trim(),
+                    phoneNumber: $("#resPhone").val().trim(),
+                    email: $("#resEmail").val().trim(),
+                    uniqueID: $("#resID").val().trim()
+                }
+
+                console.log()
+
+                $.post("/api/reservation", newRes,
+                    function (data) {
+                        if (data) {
+                            console.log("Booked");
+                        } else {
+                            console.log("Waiting List");
+                        }
+                        $("#resName").val("");
+                        $("#resPhone").val("");
+                        $("#resEmail").val("");
+                        $("#resID").val("");
+                    });
+            });
+        </script>
+</body>
+
+</html>

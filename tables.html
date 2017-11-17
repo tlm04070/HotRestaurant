@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tables Page</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <style type="text/css">
+        .card {
+            background: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding-top: 40px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron text-center">
+                <h1>Hot Restaurant</h1>
+                <hr class="my-4">
+                <h2>Current Reservations and Waiting List</h2>
+                <a href="/reservation">
+                    <button class="btn btn-danger" id="res">Make Reservation</button>
+                </a>
+                <a href="/">
+                    <button class="btn btn-default" id="home">Home</button>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Current Reservations</h3>
+                </div>
+                <div class="panel-body" id="tables">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Waiting List</h3>
+                </div>
+                <div class="panel-body" id="waiters">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p>Control Panel</p>
+            <p>
+                <a href="#" id="clear">Clear Table</a> |
+                <a href="/api/tables">API Table Link</a> |
+                <a href="/api/waitlist">API Wait List</a>
+        </div>
+    </footer>
+    <script type="text/javascript">
+        function tableQuery() {
+            var url = window.location.origin;
+
+            $.ajax({
+                    url: url + "/api/tables",
+                    method: "GET"
+                })
+                .done(function (tableData) {
+                    for (var i = 0; i < tableData.length; i++) {
+                        var tableSection = $("<div>");
+                        tableSection.addClass("well");
+                        tableSection.attr('id', 'tableWell-' + i + 1);
+                        $("#tables").append(tableSection);
+
+                        var tNum = i + 1;
+
+                        $("#tableWell-" + i + 1).append('<h2><span class="label label-primary">' + tNum +
+                            "</span> |" + tableData[i].uniqueID + "</h2>");
+                    }
+                });
+
+        }
+
+        function waitQuery() {
+
+            var url = window.location.origin;
+
+            $.ajax({
+                    url: url + "/api/waitlist",
+                    method: "GET"
+                })
+                .done(function (waitData) {
+                    for (var i = 0; i < waitData.length; i++) {
+                        var waitSection = $("<div>");
+                        waitSection.addClass("well");
+                        waitSection.attr("id", "waitWell-" + i + 1);
+                        $("#waiters").append(waitSection);
+
+                        var wNum = i + 1;
+
+                        $("#waitWell-" + i + 1).append('<h2><span class="label label-primary">' + wNum +
+                            "</span> |" +
+                            waitData[i].uniqueID + "</h2>");
+                    }
+                });
+
+        }
+
+        function clear() {
+            var currentURL = window.location.origin;
+            $.ajax({
+                url: currentURL + "/api/clear",
+                method: "POST"
+            })
+        }
+
+        $("#clear").on("click", function () {
+            alert("Clearing...");
+            clear();
+
+            location.reload();
+        });
+
+        tableQuery();
+        waitQuery();
+    </script>
+</body>
+
+</html>
